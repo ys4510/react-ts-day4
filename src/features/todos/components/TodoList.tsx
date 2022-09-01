@@ -1,6 +1,11 @@
-import React from "react";
+import React, { FC } from "react";
+import { selectTodos } from "../todoSlice";
+import { useAppSelector } from "../../../app/hooks";
+import TodoItem from "./TodoItem";
 
-const TodoList = () => {
+const TodoList: FC = () => {
+  const todos = useAppSelector(selectTodos);
+  // console.log('todos: ',todos);
   return (
     <>
       <table>
@@ -18,9 +23,13 @@ const TodoList = () => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td colSpan={9}>No Data</td>
-          </tr>
+          {todos.length ? (
+            todos.map((todo, index) => <TodoItem key={index} todo={todo} />)
+          ) : (
+            <tr>
+              <td colSpan={9}>No Data</td>
+            </tr>
+          )}
         </tbody>
       </table>
     </>
