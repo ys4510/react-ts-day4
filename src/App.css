@@ -1,0 +1,24 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+#form-wrapper {
+  background-color: pink;
+  display: flex;
+}
+
+#label-wrapper {
+  background-color: #eee;
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+  min-height: 60px;
+  margin: 8px;
+}
+
+#label-wrapper > label {
+  text-align: right;
+}
