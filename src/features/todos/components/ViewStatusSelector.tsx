@@ -16,7 +16,7 @@ const ViewStatusSelector = () => {
     <>
       <hr />
       <label>
-        <span>View Options :</span>
+        <span>View Options : </span>
         <select value={viewStatus} onChange={onChangeViewStatus}>
           {Object.entries(VIEW_STATUSES).map(([key, value]) => (
             <option key={key} value={key}>

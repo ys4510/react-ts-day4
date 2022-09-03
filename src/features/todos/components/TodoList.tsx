@@ -1,13 +1,16 @@
-import React, { FC } from "react";
-import { selectTodos } from "../todoSlice";
-import { useAppSelector } from "../../../app/hooks";
+import { type FC } from "react";
+import selectTodos from "../utils/selectTodos";
 import TodoItem from "./TodoItem";
+import BaseModal from "./modals/BaseModal";
+
 
 const TodoList: FC = () => {
-  const todos = useAppSelector(selectTodos);
-  // console.log('todos: ',todos);
+  const todos = selectTodos();
+ 
+
   return (
     <>
+      <BaseModal />
       <table>
         <thead>
           <tr>

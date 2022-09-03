@@ -1,80 +1,112 @@
-import { createSlice } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSlice,
+  SerializedError,
+} from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { Todo, ViewStatus } from "./types";
-import getNewId from "./utils/getNewId";
+import { Todo, ViewStatus, TodoInput, ButtonType, TodoID } from "./types";
 import getCurrentDateTime from "./utils/getCurrentDateTime";
-import { RootState } from "../../app/store";
+import fetchTodos from "./api/fetchTodos";
+import { setTodos } from "./localStorage/todosLocalStorage";
+
 export type TodoState = {
   todos: Todo[];
   viewStatus: ViewStatus;
   isFetching: boolean;
-  error: string | null;
+  error: SerializedError | null;
+  isModalOpen: boolean;
+  buttonType: ButtonType | null;
+  selectedTodoId: TodoID | null;
 };
 
 const initialState: TodoState = {
-  todos: [
-    {
-      id: getNewId(),
-      title: "AAA",
-      body: "ABABAB",
-      status: "waiting",
-      createdAt: getCurrentDateTime(),
-      updatedAt: "",
-      deletedAt: "",
-    },
-    {
-      id: getNewId(),
-      title: "BBB",
-      body: "BBABBB",
-      status: "pending",
-      createdAt: getCurrentDateTime(),
-      updatedAt: getCurrentDateTime(),
-      deletedAt: "",
-    },
-    {
-      id: getNewId(),
-      title: "CCC",
-      body: "CCCCCC",
-      status: "completed",
-      createdAt: getCurrentDateTime(),
-      updatedAt: "",
-      deletedAt: getCurrentDateTime(),
-    },
-  ],
+  todos: [],
   viewStatus: "all",
   isFetching: false,
   error: null,
+  isModalOpen: false,
+  buttonType: null,
+  selectedTodoId: null,
 };
 
 export const todoSlice = createSlice({
   name: "todos",
   initialState,
   reducers: {
-    create: (state) => {},
-    update: (state) => {},
-    changeViewStatus: (state, actions:PayloadAction<ViewStatus>) => {
+    create: (state, actions: PayloadAction<TodoInput>) => {
+      state.todos.push({ ...actions.payload, deletedAt: "", updatedAt: "" });
+      setTodos(state.todos);
+    },
+    update: (state, actions: PayloadAction<TodoInput>) => {
+      const index = state.todos.findIndex(
+        (todo) => todo.id === actions.payload.id
+      );
+      state.todos[index] = {...actions.payload};
+      setTodos(state.todos);
+    },
+    remove: (state, actions: PayloadAction<TodoID>) => {
+      const index = state.todos.findIndex(
+        (todo) => todo.id === actions.payload
+      );
+      state.todos[index] = {
+        ...state.todos[index],
+        deletedAt: getCurrentDateTime(),
+      };
+      setTodos(state.todos);
+    },
+    restore: (state, actions: PayloadAction<TodoID>) => {
+      const index = state.todos.findIndex(
+        (todo) => todo.id === actions.payload
+      );
+      state.todos[index] = { ...state.todos[index], deletedAt: "" };
+      setTodos(state.todos);
+    },
+    changeViewStatus: (state, actions: PayloadAction<ViewStatus>) => {
       state.viewStatus = actions.payload;
     },
+    setButtonType: (state, actions: PayloadAction<ButtonType>) => {
+      state.buttonType = actions.payload;
+      state.isModalOpen = true;
+    },
+    toggleIsModalOpen: (state) => {
+      state.isModalOpen = !state.isModalOpen;
+    },
+    setSelectedTodoId: (state, actions: PayloadAction<TodoID>) => {
+      state.selectedTodoId = actions.payload;
+    },
   },
-  extraReducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchTodoAsync.pending, (state) => {
+        state.isFetching = true;
+      })
+      .addCase(fetchTodoAsync.fulfilled, (state, actions) => {
+        state.isFetching = false;
+        state.error = null;
+        state.todos = actions.payload;
+      })
+      .addCase(fetchTodoAsync.rejected, (state, actions) => {
+        state.isFetching = false;
+        state.error = actions.error;
+      });
+  },
 });
 
-export const selectTodos = (state: RootState) => {
-  // console.log('***: ', state.todos.todos);
-
-  if (state.todos.viewStatus === "deleted") {
-    return state.todos.todos.filter((todo) => todo.deletedAt !== "");
+export const fetchTodoAsync = createAsyncThunk<Todo[]>(
+  `${todoSlice.name}/fetch`,
+  async () => {
+    const response = await fetchTodos();
+    return response.data;
   }
-
-  if (state.todos.viewStatus === "updated") {
-    return state.todos.todos.filter((todo) => todo.updatedAt === "");
-  }
-  if (state.todos.viewStatus === "all") {
-    return state.todos.todos.filter((todo) => todo.deletedAt === "");
-  }
-  console.log('selectTodos end')
-  return state.todos.todos;
-};
-
-export const { create, update , changeViewStatus} = todoSlice.actions;
+);
+export const {
+  create,
+  update,
+  remove,
+  restore,
+  changeViewStatus,
+  toggleIsModalOpen,
+  setButtonType,
+  setSelectedTodoId,
+} = todoSlice.actions;
 export default todoSlice.reducer;

@@ -8,8 +8,19 @@ export type Todo = {
   body: string;
   status: TodoStatus;
   createdAt: DateTime;
-  updatedAt?: DateTime;
-  deletedAt?: DateTime;
+  updatedAt: DateTime;
+  deletedAt: DateTime;
+};
+
+
+export type TodoInput = {
+  id: TodoID;
+  title: string;
+  body: string;
+  status: TodoStatus;
+  createdAt: DateTime;
+  updatedAt: DateTime;
+  deletedAt: DateTime;
 };
 
 export const TODO_STATUSES = {
@@ -29,3 +40,9 @@ export const VIEW_STATUSES = {
 };
 
 export type ViewStatus = keyof typeof VIEW_STATUSES;
+
+export  const BUTTON_TYPE = [
+"update" , "delete" , "restore", "cancel" 
+]
+
+export type ButtonType = typeof BUTTON_TYPE[number]
