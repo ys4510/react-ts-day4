@@ -223,7 +223,7 @@ describe("todos reducer", () => {
   });
 });
 
-xdescribe("todos extraReducer", () => {
+describe("todos extraReducer", () => {
   it('makes isFetching "true" when pending', async () => {
     const initialState: TodoState = {
       todos: [],

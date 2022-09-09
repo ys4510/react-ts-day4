@@ -1,9 +1,9 @@
-import {TodoStatus, TODO_STATUSES} from '../types'
+import { TodoStatus, TODO_STATUSES } from "../types";
 
-const translateStatus = (val: string):TodoStatus => {
+const translateStatus = (val: string): TodoStatus => {
   const statusArr = Object.entries(TODO_STATUSES);
-  const index = statusArr.findIndex(status => status[1] === val)
+  const index = statusArr.findIndex((status) => status[1] === val);
   return statusArr[index][0] as TodoStatus;
-}
+};
 
-export default translateStatus
+export default translateStatus;
