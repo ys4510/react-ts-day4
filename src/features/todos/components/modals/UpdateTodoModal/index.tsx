@@ -1,9 +1,9 @@
 import React, { FC, useState } from "react";
-import { TodoInput, TODO_STATUSES, TodoStatus } from "../../../types";
-import getCurrentDateTime from "../../../utils/getCurrentDateTime";
+import { TodoUpdate, TODO_STATUSES, TodoStatus } from "../../../types";
 import styles from "./index.module.css";
 import { useAppDispatch, useAppSelector } from "../../../../../app/hooks";
 import { toggleIsModalOpen, update } from "../../../todoSlice";
+import translateStatus from "../../../utils/translateStatus";
 
 export const UpdateTodoModal: FC = () => {
   const dispatch = useAppDispatch();
@@ -12,7 +12,7 @@ export const UpdateTodoModal: FC = () => {
     state.todos.todos.findIndex((todo) => todo.id === TodoId)
   );
   const todo = useAppSelector((state) => state.todos.todos[index]);
-  const [newInput, setNewInput] = useState<TodoInput>(todo);
+  const [newInput, setNewInput] = useState<TodoUpdate>(todo);
 
   const onChangeTextHandler: React.ChangeEventHandler<HTMLInputElement> = (
     e
@@ -24,11 +24,11 @@ export const UpdateTodoModal: FC = () => {
     e
   ) => {
     const newStatus = e.target.value as TodoStatus;
-    setNewInput({ ...newInput, [e.target.name]: e.target.value });
+    setNewInput({ ...newInput, status: translateStatus(newStatus) });
   };
 
   const onUpdateOkHandler = () => {
-    dispatch(update({ ...newInput, updatedAt: getCurrentDateTime() }));
+    dispatch(update({ ...newInput }));
     dispatch(toggleIsModalOpen());
   };
 

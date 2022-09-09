@@ -4,10 +4,18 @@ import {
   SerializedError,
 } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { Todo, ViewStatus, TodoInput, ButtonType, TodoID } from "./types";
+import {
+  Todo,
+  ViewStatus,
+  TodoInput,
+  TodoUpdate,
+  ButtonType,
+  TodoID,
+} from "./types";
 import getCurrentDateTime from "./utils/getCurrentDateTime";
 import fetchTodos from "./api/fetchTodos";
 import { setTodos } from "./localStorage/todosLocalStorage";
+import getNewId from "./utils/getNewId";
 
 export type TodoState = {
   todos: Todo[];
@@ -34,14 +42,26 @@ export const todoSlice = createSlice({
   initialState,
   reducers: {
     create: (state, actions: PayloadAction<TodoInput>) => {
-      state.todos.push({ ...actions.payload, deletedAt: "", updatedAt: "" });
+      state.todos.push({
+        ...actions.payload,
+        id: getNewId(),
+        status: "waiting",
+        createdAt: getCurrentDateTime(),
+        deletedAt: undefined,
+        updatedAt: undefined,
+      });
       setTodos(state.todos);
     },
-    update: (state, actions: PayloadAction<TodoInput>) => {
+    update: (state, actions: PayloadAction<TodoUpdate>) => {
       const index = state.todos.findIndex(
         (todo) => todo.id === actions.payload.id
       );
-      state.todos[index] = {...actions.payload};
+      state.todos[index] = {
+        createdAt: state.todos[index].createdAt,
+        deletedAt: state.todos[index].deletedAt,
+        ...actions.payload,
+        updatedAt: getCurrentDateTime(),
+      };
       setTodos(state.todos);
     },
     remove: (state, actions: PayloadAction<TodoID>) => {
@@ -58,7 +78,7 @@ export const todoSlice = createSlice({
       const index = state.todos.findIndex(
         (todo) => todo.id === actions.payload
       );
-      state.todos[index] = { ...state.todos[index], deletedAt: "" };
+      state.todos[index] = { ...state.todos[index], deletedAt: undefined };
       setTodos(state.todos);
     },
     changeViewStatus: (state, actions: PayloadAction<ViewStatus>) => {

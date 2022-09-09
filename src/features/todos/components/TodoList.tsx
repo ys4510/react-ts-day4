@@ -16,7 +16,7 @@ const TodoList: FC = () => {
           <tr>
             <th>ID</th>
             <th>Task</th>
-            <th>Desc.</th>
+            <th>Notes</th>
             <th>Status</th>
             <th>Created</th>
             <th>Updated</th>

@@ -1,6 +1,6 @@
 export type TodoID = string;
 
-export type DateTime = string;
+export type DateTime = string | undefined;
 
 export type Todo = {
   id: TodoID;
@@ -12,15 +12,16 @@ export type Todo = {
   deletedAt: DateTime;
 };
 
-
 export type TodoInput = {
+  title: string;
+  body: string;
+};
+
+export type TodoUpdate = {
   id: TodoID;
   title: string;
   body: string;
   status: TodoStatus;
-  createdAt: DateTime;
-  updatedAt: DateTime;
-  deletedAt: DateTime;
 };
 
 export const TODO_STATUSES = {
@@ -41,8 +42,6 @@ export const VIEW_STATUSES = {
 
 export type ViewStatus = keyof typeof VIEW_STATUSES;
 
-export  const BUTTON_TYPE = [
-"update" , "delete" , "restore", "cancel" 
-]
+export const BUTTON_TYPE = ["update", "delete", "restore", "cancel"];
 
-export type ButtonType = typeof BUTTON_TYPE[number]
+export type ButtonType = typeof BUTTON_TYPE[number];

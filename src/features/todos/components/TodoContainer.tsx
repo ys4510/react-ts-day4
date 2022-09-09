@@ -21,7 +21,7 @@ const TodoContainer: FC = () => {
       <TodoForm />
       <ViewStatusSelector />
       <TodoList />
-      <h5>Vite x React Redux Toolkit x Typescript</h5>
+      <h5>Vite x React Redux Toolkit x Typescript x Jest</h5>
     </>
   );
 };
