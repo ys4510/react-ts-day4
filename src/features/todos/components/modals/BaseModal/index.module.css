@@ -1,0 +1,35 @@
+.modal {
+  width: 100%;
+  height: 100%;
+  background-color: #00000077;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: faceIn 0.9s;
+}
+
+.modalContainer {
+  min-width: 300px;
+  min-height: 200px;
+  border-radius: 8px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+@keyframes faceIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

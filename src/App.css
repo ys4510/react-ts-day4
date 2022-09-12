@@ -6,12 +6,13 @@
 }
 
 #form-wrapper {
-  background-color: pink;
   display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
 #label-wrapper {
-  background-color: #eee;
   display: flex;
   justify-content: space-around;
   flex-direction: column;
@@ -21,4 +22,10 @@
 
 #label-wrapper > label {
   text-align: right;
+}
+
+#loading {
+  margin: auto auto;
+  font-size: 2rem;
+  font-family:'Times New Roman', Times, serif;
 }
