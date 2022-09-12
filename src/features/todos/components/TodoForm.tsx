@@ -20,7 +20,7 @@ const TodoForm: FC = () => {
 
   const onCreateHandler = () => {
     if (!title || !body) {
-      alert("Please enter Title and Description");
+      alert("Please enter Task and Notes");
       return;
     }
 
